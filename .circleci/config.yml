@@ -39,5 +39,8 @@ jobs:
       - store_artifacts:
           path: app/build/reports
           destination: reports
+      - run:
+	name: Create test directory
+	command: mkdir ~/test_output
       - store_test_results:
-          path: app/build/output/
+          path: ~/test_output

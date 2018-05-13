@@ -101,7 +101,7 @@ public class CallDriverTest {
     public void step2_verifySearch() throws Exception {
         // Searching for particular Driver
 
-        Thread.sleep(8000);
+        Thread.sleep(15000);
         onView(AppLocators.getSearchTextbox())
                 .perform(typeText(searchString), closeSoftKeyboard());
 
@@ -112,9 +112,11 @@ public class CallDriverTest {
                 .perform(click());
 
 
+        Thread.sleep(5000);
         onView(AppLocators.getCallBtn())
                 .check(matches(isDisplayed()))
                 .perform(click());
+        Thread.sleep(5000);
 
 /*
         onData(withText(driverName))

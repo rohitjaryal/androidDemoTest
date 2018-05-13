@@ -38,28 +38,24 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
         
-     
+     - run:
+          name: Lists installed targets
+          command: android list target
+
+- run:
+          name: List available targets and other sdk modules
+          command: sdkmanager --list --include_obsolete --verbose
+
+
       - run:
-          name: Setup emulator
-          command: sdkmanager "system-images;android-22;default;armeabi-v7a" && echo "no" | avdmanager create avd -n test -k "system-images;android-22;default;armeabi-v7a"
+          name: Create avd
+       #   command: echo no | avdmanager create avd -n testEmulator -k "system-images;android-23;google_apis;armeabi-v7a"
+          command: echo no | avdmanager create avd -n testEmulator -k "system-images;android-24;default;armeabi-v7a"
+
       - run:
-          name: Launch emulator
-          command: export LD_LIBRARY_PATH=${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib && emulator64-arm -avd test -noaudio -no-boot-anim -no-window -accel on
+          name: Start emulator
+          command: /opt/android-sdk-linux/emulator/emulator -avd testEmulator -no-audio -no-window
           background: true
 
 	 # run tests!
       - run: ./gradlew connectedAndroidTest
-test:
-  override:
-    # start the emulator
-    - emulator -avd circleci-android24 -no-window:
-        background: true
-        parallel: true
-    # wait for it to have booted
-    - circle-android wait-for-boot
-    # run tests  against the emulator.
-    - ./gradlew connectedAndroidTest
-    # copy the build outputs to artifacts
-    - cp -r my-project/build/outputs $CIRCLE_ARTIFACTS
-    # copy the test results to the test results directory.
-    - cp -r my-project/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
